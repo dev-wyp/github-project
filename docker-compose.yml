@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile # Or Dockerfile.dev for development
+    ports:
+      - '3003:80' # Production: Map Nginx to port 3000 on the host
+    environment:
+      - NODE_ENV=production
