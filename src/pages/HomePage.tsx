@@ -9,6 +9,7 @@ const HomePage: React.FC = () => {
   const [users, setUsers] = useState([]);
   const [totalCounts, setTotalCounts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
@@ -20,11 +21,14 @@ const HomePage: React.FC = () => {
 
   const fetchUsers = async (searchQuery: string, page: number) => {
     try {
+      setIsLoading(true);
       const response = await searchUsers(searchQuery, page);
       setUsers(response.data.items);
       setTotalCounts(response.data.total_count);
     } catch (error) {
       console.error('Error fetching users:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,7 +49,9 @@ const HomePage: React.FC = () => {
     <div className="home-page">
       <SearchBar onSearch={handleSearch} />
       <h3>User List ({totalCounts})</h3>
-      {users.length === 0 ? (
+      {isLoading ? (
+        <h5 style={{ textAlign: 'center', margin: '25% auto' }}>Loading...</h5>
+      ) : users.length === 0 ? (
         <h5 style={{ textAlign: 'center', margin: '25% auto' }}>
           Nothing Here... You can search with username....
         </h5>
